@@ -25,6 +25,7 @@ export type Audio = {
   faint: () => void;
   evolve: () => void;
   heal: () => void;
+  gems: () => void;
   startTown: () => void;
   stopTown: () => void;
 };
@@ -109,6 +110,10 @@ export function createAudio(): Audio {
     heal: () => {
       tone(440, 0.1, 'sine', 0.03, 40);
       tone(660, 0.16, 'sine', 0.03, 20, 0.08);
+    },
+    gems: () => {
+      tone(880, 0.08, 'sine', 0.03, 40);
+      tone(1174, 0.12, 'triangle', 0.025, 20, 0.07);
     },
     startTown: () => {
       if (timer || muted) return;

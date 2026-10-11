@@ -16,6 +16,7 @@ You wake in Hearth. The morning is the whole game.
 - On the benches: Pip (grass), Emberkit (fire), and Drop (water). Take one. They start at level 5.
 - Vesper takes the kindling that beats yours and battles you in the lab. Tackle is the fair fight. The move that shares your partner's type is the one Vesper resists.
 - Losing sends you home. The morning continues either way. Mom and the bed patch your partner.
+- A win pays in rubies. Rubies are what Hearth spends. Pell, by the cove, sells a bun for 6 rubies, and it patches your partner.
 - The meadow east of the lab has wild Mote, Peb, Sprig, and Wisp. Battles there raise your level.
 - A partner changes at level 8 and again at level 12. Pip becomes Fernlet, then Mossantler. Emberkit becomes Coalpup, then Kilnhound. Drop becomes Brookit, then Rivercrest. Show Quill each change.
 - The east road stays latched. Another town is a later page.

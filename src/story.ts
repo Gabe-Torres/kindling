@@ -1,4 +1,4 @@
-import { counterLine, stageName, type LineId } from './rules.ts';
+import { counterLine, rubyLabel, stageName, type LineId } from './rules.ts';
 
 export type Speech = { who: string; text: string };
 
@@ -6,6 +6,7 @@ export function momIntro(name: string): Speech[] {
   return [
     { who: 'Mom', text: `Morning, ${name}. Professor Quill knocked before the cove turned gold. The three in his lab woke up, and he asked for you.` },
     { who: 'Mom', text: 'If your partner comes home scuffed, I can patch them. The east road is still latched. Today is just the town.' },
+    { who: 'Mom', text: 'Wins pay in rubies. Rubies are what this island spends. Pell sells buns with them, down by the cove.' },
   ];
 }
 
@@ -113,6 +114,28 @@ export function blackout(mon: string): Speech[] {
     { who: '', text: `${mon} can't keep going.` },
     { who: '', text: 'You wake in your room. Mom has already patched the scrapes.' },
   ];
+}
+
+export function rubyFound(count: number, rival: boolean): Speech[] {
+  const pocket = rubyLabel(count);
+  if (rival) return [{ who: '', text: `Vesper pays ${pocket}. In Hearth, a loss is settled in rubies.` }];
+  return [{ who: '', text: `You pick up ${pocket}.` }];
+}
+
+export function pellPitch(mon: string | null, hurt: boolean, rubies: number, price: number): Speech[] {
+  const cost = rubyLabel(price);
+  if (!mon) {
+    return [{ who: 'Pell', text: `Cove buns are ${cost}. They patch a partner. Come back when one is walking with you.` }];
+  }
+  if (!hurt) return [{ who: 'Pell', text: `${mon} looks fine. A bun is ${cost} when the scrapes are real.` }];
+  if (rubies < price) {
+    return [{ who: 'Pell', text: `A bun is ${cost}. Your pocket is short. The meadow pays in the same stones.` }];
+  }
+  return [{ who: 'Pell', text: `${mon} is scuffed. A cove bun is ${cost}, and it closes the scrapes.` }];
+}
+
+export function pellSold(mon: string): Speech[] {
+  return [{ who: 'Pell', text: `There. ${mon} can breathe again.` }];
 }
 
 export function learnedLine(mon: string, move: string): Speech[] {

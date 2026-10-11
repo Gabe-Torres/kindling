@@ -283,6 +283,19 @@ export function xpGain(foeLevel: number): number {
   return 16 + foeLevel * 6;
 }
 
+// Rubies are the only currency. A win pays them. A loss and a retreat pay nothing.
+export const BUN_PRICE = 6;
+
+export function rubyPrize(foeLevel: number, rival: boolean): number {
+  const level = Math.max(1, Math.floor(foeLevel));
+  return rival ? 8 + level * 4 : 2 + level * 2;
+}
+
+export function rubyLabel(count: number): string {
+  const n = Math.max(0, Math.floor(count));
+  return n === 1 ? '1 ruby' : `${n} rubies`;
+}
+
 export function applyXp(
   line: LineId,
   level: number,

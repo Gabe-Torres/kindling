@@ -104,6 +104,7 @@ export const LOOKS = {
   quill: { shirt: 0x3d6d8a, pants: 0x394049, hair: 0xd5d5d5, coat: 0xf4f6f7 },
   vesper: { shirt: 0xb4332a, pants: 0x24222c, hair: 0x1b1922 },
   nia: { shirt: 0x6a8f4e, pants: 0x3e4a38, hair: 0x3a2a22 },
+  pell: { shirt: 0xf4efe4, pants: 0x4a3a32, hair: 0x2a211c, coat: 0xc4533a },
 } as const;
 
 function leaf(parent: Group, x: number, y: number, z: number, s: number, tilt: number): void {

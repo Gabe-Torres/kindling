@@ -18,6 +18,7 @@ import {
   HOUSE,
   LAB,
   NIA,
+  PELL,
   PLAY_CAM,
   PLAYER_RADIUS,
   ROOM_CAM,
@@ -34,6 +35,7 @@ import { LOOKS, makeMonster, makePerson } from './meshes.ts';
 import {
   MOVES,
   STARTERS,
+  BUN_PRICE,
   START_LEVEL,
   applyXp,
   bestMove,
@@ -48,6 +50,8 @@ import {
   movesAt,
   objective,
   resolveTurn,
+  rubyLabel,
+  rubyPrize,
   stageAt,
   stageName,
   strike,
@@ -72,11 +76,14 @@ import {
   momHeal,
   momIntro,
   niaLine,
+  pellPitch,
+  pellSold,
   pitch,
   quillHeal,
   quillWaiting,
   reportLines,
   rivalIntro,
+  rubyFound,
   signLine,
   takenLines,
   vesperWaiting,
@@ -99,6 +106,7 @@ type Save = {
   yaw: number;
   meadowCarry: number;
   meadowSteps: number;
+  rubies: number;
   mon: Mon | null;
   flags: StoryFlags;
 };
@@ -113,6 +121,7 @@ const placeEl = must('#place');
 const goalEl = must('#goal');
 const partnerEl = must('#partner');
 const partnerName = must('#partner-name');
+const rubiesEl = must('#rubies');
 const partnerHp = must('#partner-hp') as HTMLElement;
 const box = must('#box');
 const whoEl = must('#who');
@@ -175,13 +184,15 @@ const mom = makePerson(LOOKS.mom);
 const quill = makePerson(LOOKS.quill);
 const vesper = makePerson(LOOKS.vesper);
 const nia = makePerson(LOOKS.nia);
+const pell = makePerson(LOOKS.pell);
 placeAt(mom, HOUSE.mom.x, HOUSE.mom.z, Math.PI);
 placeAt(quill, LAB.quill.x, LAB.quill.z, Math.PI);
 placeAt(vesper, LAB.vesper.x, LAB.vesper.z, Math.PI / 2);
 placeAt(nia, NIA.x, NIA.z, Math.PI);
+placeAt(pell, PELL.x, PELL.z, -Math.PI / 2);
 house.group.add(mom);
 lab.group.add(quill, vesper);
-town.group.add(nia);
+town.group.add(nia, pell);
 scene.add(kid);
 
 const tables: Partial<Record<LineId, Group>> = {};
@@ -279,6 +290,7 @@ function fresh(name: string): Save {
     yaw: Math.PI,
     meadowCarry: 0,
     meadowSteps: 0,
+    rubies: 0,
     mon: null,
     flags: {
       momSpoke: false,
@@ -299,6 +311,8 @@ function loadSave(): Save | null {
     if (data.v !== 1 || !data.name || !data.flags) return null;
     if (data.scene !== 'town' && data.scene !== 'house' && data.scene !== 'lab') return null;
     if (data.mon) data.mon.hp = Math.min(data.mon.hp, maxHp(data.mon.line, data.mon.level));
+    const pocket = Math.floor(Number(data.rubies));
+    data.rubies = Number.isFinite(pocket) && pocket > 0 ? pocket : 0;
     return data;
   } catch {
     return null;
@@ -361,6 +375,7 @@ function monName(): string {
 function refresh(): void {
   placeEl.textContent = placeName();
   goalEl.textContent = objective(save.flags, save.mon);
+  rubiesEl.textContent = rubyLabel(save.rubies);
   if (!save.mon || state.mode !== 'play') {
     partnerEl.hidden = true;
   } else {
@@ -557,6 +572,7 @@ function nearestTalk(): (() => Promise<void>) | null {
     }
   } else {
     spots.push({ x: NIA.x, z: NIA.z, fn: async () => { await speak(niaLine()); } });
+    spots.push({ x: PELL.x, z: PELL.z, fn: talkPell });
     for (const sign of SIGNS) spots.push({ x: sign.x, z: sign.z, fn: async () => { await speak(signLine(sign.id)); } });
   }
   let best: { d: number; fn: () => Promise<void> } | null = null;
@@ -565,6 +581,20 @@ function nearestTalk(): (() => Promise<void>) | null {
     if (d < 1.5 && (!best || d < best.d)) best = { d, fn: spot.fn };
   }
   return best?.fn ?? null;
+}
+
+async function talkPell(): Promise<void> {
+  const mon = save.mon ? monName() : null;
+  const wounded = hurt();
+  await speak(pellPitch(mon, wounded, save.rubies, BUN_PRICE));
+  if (!save.mon || !wounded || save.rubies < BUN_PRICE) return;
+  const yes = await choose(`Buy a bun for ${rubyLabel(BUN_PRICE)}?`, 'Buy', 'Not now');
+  if (!yes || !save.mon || save.rubies < BUN_PRICE) return;
+  save.rubies -= BUN_PRICE;
+  save.mon.hp = maxHp(save.mon.line, save.mon.level);
+  rubiesEl.textContent = rubyLabel(save.rubies);
+  audio.heal();
+  await speak(pellSold(monName()));
 }
 
 async function talkMom(): Promise<void> {
@@ -763,6 +793,11 @@ async function startBattle(kind: 'rival' | 'wild', foeLine: LineId, foeLevel: nu
     save.mon.hp = player.hp;
   } else if (foe.hp <= 0) {
     await battleSay(`${stageName(foe.line, foe.level)} is done.`, 0);
+    const prize = rubyPrize(foe.level, kind === 'rival');
+    save.rubies += prize;
+    rubiesEl.textContent = rubyLabel(save.rubies);
+    audio.gems();
+    await battleSay(rubyFound(prize, kind === 'rival')[0].text, 0);
     const oldLevel = save.mon.level;
     const oldName = stageName(save.mon.line, oldLevel);
     const known = new Set(movesAt(save.mon.line, oldLevel));
@@ -1005,7 +1040,7 @@ function loop(now: number): void {
   const amp = reduceMotion ? 0 : 0.035;
   bob(kid, state.time, amp);
   bob(follower, state.time + 0.6, amp);
-  for (const person of [mom, quill, vesper, nia]) bob(person, state.time, amp * 0.6);
+  for (const person of [mom, quill, vesper, nia, pell]) bob(person, state.time, amp * 0.6);
   syncFollower(dt, false);
   placeCamera(dt, false);
   const water = town.group.userData.water as { uniforms?: { uTime: { value: number } } } | undefined;

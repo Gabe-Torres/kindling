@@ -58,6 +58,8 @@ export const SIGNS = [
 ];
 
 export const NIA = { x: 10.7, z: 4.15 };
+// West of the house, east of the cove sign, so the two talk spots do not overlap.
+export const PELL = { x: -6.2, z: 5.1 };
 
 export const TOWN_SPAWN = {
   fromHouse: { x: 0, z: 3.85, yaw: 0 },

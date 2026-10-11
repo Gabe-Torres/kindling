@@ -131,7 +131,8 @@ label { font-weight: 800; font-size: 14px; }
 
 .where p, #partner p { margin: 0; font-weight: 800; }
 #place { font-size: 16px; }
-#goal, #partner-name { font-size: 13px; }
+#goal, #partner-name, #rubies { font-size: 13px; }
+#rubies { color: #9c2f2a; }
 
 #tools {
   position: fixed;

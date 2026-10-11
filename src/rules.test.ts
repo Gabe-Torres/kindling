@@ -3,6 +3,7 @@ import {
   HOUSE,
   LAB,
   MEADOW,
+  PELL,
   PLAYER_RADIUS,
   TOWN_BOUNDS,
   TOWN_SPAWN,
@@ -16,6 +17,7 @@ import {
   townSolids,
 } from './layout.ts';
 import {
+  BUN_PRICE,
   EVOLVE,
   LINES,
   START_LEVEL,
@@ -32,6 +34,8 @@ import {
   movesAt,
   objective,
   resolveTurn,
+  rubyLabel,
+  rubyPrize,
   stageAt,
   stageName,
   statsFor,
@@ -122,6 +126,15 @@ assert(jumped.level === 8 && jumped.stages === 1, 'crossing 8 reports one stage'
 const hp = hpAfterGrowth('pip', 7, 8, maxHp('pip', 7) - 4);
 assert(hp === maxHp('pip', 8) - 4, 'leveling heals the new hit points and keeps the bruise');
 assert(statsFor('pip', 8).hp > statsFor('pip', 7).hp, 'evolution raises hp');
+
+assert(rubyPrize(5, true) === 28, 'a rival loss pays 28 rubies');
+assert(rubyPrize(2, false) === BUN_PRICE, 'one small wild pays for a bun');
+assert(rubyPrize(3, false) === 8, 'a wild pays less than the rival');
+assert(rubyLabel(1) === '1 ruby', 'one ruby');
+assert(rubyLabel(0) === '0 rubies', 'an empty pocket');
+assert(rubyLabel(6) === '6 rubies', 'the bun price reads as a plural');
+assert(insideBounds(PELL.x, PELL.z, TOWN_BOUNDS), 'Pell stands in town');
+assert(!townSolids().some((solid) => circleHits(PELL.x, PELL.z, PLAYER_RADIUS, solid)), 'Pell is not inside a wall');
 
 assert(wildEncounter(0.1, 5).line === 'mote', 'common wild');
 assert(wildEncounter(0.95, 5).line === 'wisp', 'rare wild');
