@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f2c7a4" />
+  <meta name="description" content="A first morning in Hearth. Pick a kindling, battle, and watch it change." />
+  <meta property="og:title" content="Kindling" />
+  <meta property="og:description" content="A first morning in Hearth. Pick a kindling, battle, and watch it change." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gabe-torres.github.io/kindling/" />
+  <meta property="og:image" content="https://gabe-torres.github.io/kindling/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="A round green creature with one leaf stands in a dawn town. The word Kindling sits above the cove." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Kindling" />
+  <meta name="twitter:description" content="A first morning in Hearth. Pick a kindling, battle, and watch it change." />
+  <meta name="twitter:image" content="https://gabe-torres.github.io/kindling/og.png" />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="icon" href="./favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Kindling" />
+  <link rel="apple-touch-icon" href="./icon-180.png" sizes="180x180" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <title>Kindling</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="view" aria-label="Kindling, a pocket monster morning in Hearth"></canvas>
+  <section id="title">
+    <p class="eyebrow">A first morning</p>
+    <h1>Kindling</h1>
+    <p class="lede">Hearth is one town. Three creatures woke at dawn. One of them leaves with you.</p>
+    <label>Your name <input id="name" maxlength="10" autocomplete="nickname" value="Ren" /></label>
+    <div class="row">
+      <button id="wake" type="button">Wake up</button>
+      <button id="continue" type="button" hidden>Continue</button>
+    </div>
+    <p class="fine">Open this page once, then it runs offline.</p>
+  </section>
+  <div id="hud" hidden>
+    <div class="where">
+      <p id="place">Hearth</p>
+      <p id="goal">Talk to Mom</p>
+    </div>
+    <div id="partner" hidden>
+      <p id="partner-name">Pip Lv 5</p>
+      <div class="track mini"><div id="partner-hp"></div></div>
+    </div>
+  </div>
+  <div id="tools">
+    <button id="pause" type="button" aria-label="Pause" aria-pressed="false">Pause</button>
+    <button id="mute" type="button" aria-label="Mute sound" aria-pressed="false">Sound</button>
+  </div>
+  <div id="box" hidden>
+    <p id="who"></p>
+    <p id="line"></p>
+    <div id="choice" hidden>
+      <button id="choice-yes" type="button">Yes</button>
+      <button id="choice-no" type="button">No</button>
+    </div>
+  </div>
+  <div id="battle" hidden>
+    <div id="foe-card" class="card">
+      <div class="card-top"><span id="foe-name"></span><span id="foe-lv"></span></div>
+      <div class="track"><div id="foe-hp"></div></div>
+    </div>
+    <div id="my-card" class="card">
+      <div class="card-top"><span id="my-name"></span><span id="my-lv"></span></div>
+      <div class="track"><div id="my-hp"></div></div>
+    </div>
+    <div id="battle-box">
+      <p id="battle-text"></p>
+      <div id="battle-actions"></div>
+    </div>
+  </div>
+  <div id="paused" hidden><p>Paused</p></div>
+  <div id="touch">
+    <div id="stick" aria-hidden="true"><div id="knob"></div></div>
+    <button id="act" type="button" aria-label="Talk">A</button>
+  </div>
+  <p id="status" class="sr-only" aria-live="polite">Kindling. A first morning in Hearth.</p>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

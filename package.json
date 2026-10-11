@@ -1,0 +1,23 @@
+{
+  "name": "kindling",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/make-icons.mjs && vite build && node scripts/publish-docs.mjs",
+    "preview": "vite preview",
+    "test": "node --experimental-strip-types src/rules.test.ts && node --experimental-strip-types src/frame.test.ts",
+    "icons": "node scripts/make-icons.mjs"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.0",
+    "vite-plugin-pwa": "^2.0.0",
+    "vite-plugin-singlefile": "^2.3.3"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  }
+}
